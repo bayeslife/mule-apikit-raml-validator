@@ -1,0 +1,12 @@
+#%RAML 0.8
+title: sample api
+/currentuser:
+    put:
+        body:
+            application/json:
+                schema: !jackson bayeslife.User
+            text/xml:
+                schema: !jaxb bayeslife.User
+        responses:
+            204: ~
+
