@@ -6,18 +6,16 @@
  */
 package bayeslife;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-
+import com.jayway.restassured.RestAssured;
+import org.junit.Rule;
+import org.junit.Test;
 import org.mule.tck.junit4.FunctionalTestCase;
 import org.mule.tck.junit4.rule.DynamicPort;
 
-import com.jayway.restassured.RestAssured;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
 
-import org.junit.Rule;
-import org.junit.Test;
-
-public class GeneratedSchemaTestCase extends FunctionalTestCase
+public class HTTPListenerTestCase extends FunctionalTestCase
 {
     @Rule
     public DynamicPort serverPort = new DynamicPort("serverPort");
@@ -39,12 +37,18 @@ public class GeneratedSchemaTestCase extends FunctionalTestCase
     @Override
     public String getConfigResources()
     {
-        return ConsoleTest.getFlows();
+        return "http-listener-flow.xml,flow2.xml";
     }
 
     @Test
     public void putValidJson() throws Exception {
-        ConsoleTest.runTests();
+
+        given().body("{\"username\":\"gbs\",\"firstName\":\"george\",\"lastName\":\"bernard shaw\",\"emailAddresses\":[\"gbs@ie\"]}")
+                .contentType("application/json")
+                .expect()
+                .statusCode(204).body(is(""))
+                .when().put("/api/currentuser");
+
     }
 
 
