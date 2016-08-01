@@ -17,10 +17,16 @@ import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.construct.Flow;
 import org.mule.context.DefaultMuleContextFactory;
 import org.mule.object.PrototypeObjectFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -30,11 +36,16 @@ public class ConsoleMain  {
 
     public static void main(String args[]) throws Exception {
 
-        String method="put";//args[1]
-        String resourcepath="/currentuser";//args[2]
-        String sampleRequestPath="";//args[3]
+        String ramlPath=args[0];
+        String method=args[1];
+        String resourcepath=args[2];
+        String sampleRequestPath=args[3];
 
-        String sampleRequest = "{\"username\":\"gbs\",\"firstName\":\"george\",\"lastName\":\"bernard shaw\",\"emailAddresses\":[\"gbs@ie\"]}";
+
+        String sampleRequest = readFile(sampleRequestPath,Charset.defaultCharset());
+        //String sampleRequest = "{\"username\":\"gbs\",\"firstName\":\"george\",\"lastName\":\"bernard shaw\",\"emailAddresses\":[\"gbs@ie\"]}";
+        //String sampleRequest = "{\"username\":\"gbs\",\"firstName\":\"george\",\"firstName2\":\"george\",\"lastName\":\"bernard shaw\",\"emailAddresses\":[\"gbs@ie\"]}";
+        //String sampleRequest = "{\"username2\":\"gbs\"}";
 
         String generatedFlow = generateFlow(method,resourcepath);
         String generatedApiFlow = generateApiKitFlow("/tmp/api.yaml");
@@ -52,9 +63,9 @@ public class ConsoleMain  {
         MuleEvent me = new DefaultMuleEvent(m, MessageExchangePattern.REQUEST_RESPONSE,null, f);
 
         m.setInboundProperty("host","host:80");
-        m.setInboundProperty("http.request.path","/currentuser");
+        m.setInboundProperty("http.request.path",resourcepath);
         m.setInboundProperty("http.listener.path","");
-        m.setInboundProperty("http.method","PUT");
+        m.setInboundProperty("http.method",method.toUpperCase());
         m.setInboundProperty("accept","application/json");
         m.setInboundProperty("content-type","application/json");
 
@@ -62,8 +73,12 @@ public class ConsoleMain  {
             MuleEvent res = f.process(me);
         }catch(Exception e){
             //failed and  need to get helpful error message
+            System.exit(1);
             throw e;
         }
+
+        muleContext.stop();
+        System.exit(0);
         //success
     }
 
@@ -72,14 +87,18 @@ public class ConsoleMain  {
                 "<mule xmlns=\"http://www.mulesoft.org/schema/mule/core\"\n"+
                 "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"+
                 "xmlns:http=\"http://www.mulesoft.org/schema/mule/http\"\n"+
+                "xmlns:json=\"http://www.mulesoft.org/schema/mule/json\"\n"+
                 "xmlns:apikit=\"http://www.mulesoft.org/schema/mule/apikit\"\n"+
                 "xmlns:spring=\"http://www.springframework.org/schema/beans\"\n"+
                 "xsi:schemaLocation=\"http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd\n"+
                 "http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd\n"+
+                "http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd\n"+
                 "http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd\n"+
                 "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd\">\n"+
                 "<flow name=\""+method+":"+resourcepath+"\">\n"+
-                "<set-payload value=\"hello\"/>\n"+
+                "<component class=\"bayeslife.MyComponent\"/>\n"+
+                "<json:json-to-object-transformer returnClass=\"bayeslife.User\"/>"+
+                "<component class=\"bayeslife.MyComponent\"/>\n"+
                 "</flow>\n"+
                 "</mule>";
 
@@ -112,6 +131,15 @@ public class ConsoleMain  {
         fw.write(flowxml);
         fw.flush();
         return f.getAbsolutePath();
+    }
+
+    static String readFile(String path, Charset encoding)
+            throws IOException
+    {
+        Resource resource = new ClassPathResource(path);
+
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded, encoding);
     }
 
 }

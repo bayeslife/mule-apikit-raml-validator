@@ -1,0 +1,9 @@
+#%RAML 0.8
+title: foo
+schemas:
+- container: !include schemas/Container.json
+/simpleResource:
+  post:
+    body:
+      application/json:
+        schema: container        

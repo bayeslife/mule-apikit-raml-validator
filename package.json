@@ -1,0 +1,28 @@
+{
+  "name": "mule-apikit-raml-validation",
+  "version": "1.0.0",
+  "description": "A command line application for validating raml files against the mule apikit component",
+  "main": "index.js",
+  "watch": {
+    "w": {
+      "patterns": [
+        "src",
+        "test"
+      ],
+      "extensions": "java,js,jsx,hbs,ts"
+    }
+  },
+  "scripts": {
+    "w": "mvn install -DskipTests && java -classpath target/mule-apikit-raml-validation-1.0-SNAPSHOT.jar bayeslife.ConsoleMain /home/phil/iag/generated/PaymentConfirmationRequestV1607/target/api/api.raml post /direct/payments/1234/v1607/confirmation-request /home/phil/iag/generated/PaymentConfirmationRequestV1607/src/main/api/samples/payment-confirmation-request-sample.PaymentConfirmationRequest.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bayeslife/mule-apikit-raml-validator.git"
+  },
+  "author": "Phil Tomlinson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bayeslife/mule-apikit-raml-validator/issues"
+  },
+  "homepage": "https://github.com/bayeslife/mule-apikit-raml-validator#readme"
+}

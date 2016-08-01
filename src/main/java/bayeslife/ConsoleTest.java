@@ -11,7 +11,7 @@ public class ConsoleTest
 
     public static void main(String args[]) throws Exception {
 
-        JUnitCore.runClasses(VMListenerTestCase.class);
+        JUnitCore.runClasses(ValidationTestCase.class);
     }
 
     public static String getFlows(){

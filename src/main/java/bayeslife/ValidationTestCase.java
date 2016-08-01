@@ -17,7 +17,7 @@ import com.jayway.restassured.RestAssured;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class VMListenerTestCase extends FunctionalTestCase
+public class ValidationTestCase extends FunctionalTestCase
 {
     @Rule
     public DynamicPort serverPort = new DynamicPort("serverPort");
