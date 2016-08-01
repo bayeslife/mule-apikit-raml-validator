@@ -15,10 +15,10 @@
             <scope>runtime</scope>
         </dependencySet>
     </dependencySets>
-    <files>
+    <!-- <files>
         <file>
             <source>${basedir}/src/main/assembly/jar-with-dependencies/logback.xml</source>
             <outputDirectory>/</outputDirectory>
         </file>
-    </files>
+    </files> -->
 </assembly>
