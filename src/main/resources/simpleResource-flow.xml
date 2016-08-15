@@ -10,7 +10,8 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
 
-    <flow name="post:/simpleResource">
+    <flow name="post:/simpleResource/{param}">
+        <component class="bayeslife.MyComponent"/>
         <set-payload value="hello"/>
     </flow>
 

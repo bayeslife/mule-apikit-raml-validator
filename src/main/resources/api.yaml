@@ -1,6 +1,6 @@
 #%RAML 0.8
 title: sample api
-/currentuser:
+/currentuser/{uriparam}:
     put:
         body:
             application/json:

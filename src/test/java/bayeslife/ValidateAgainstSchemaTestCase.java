@@ -43,10 +43,21 @@ public class ValidateAgainstSchemaTestCase extends FunctionalTestCase
     @Test
     public void putValidJson() throws Exception {
 
+        given().body("{\"simple\":\"100.00\"}")
+                .contentType("application/json")
+                .expect()
+                .statusCode(200).body(is(""))
+                .when().post("/simpleResource/1234");
+
+    }
+
+    @Test
+    public void putInValidCurrency() throws Exception {
+
         given().body("{\"simple\":\"100.000\"}")
                 .contentType("application/json")
                 .expect()
-                .statusCode(204).body(is(""))
+                .statusCode(500)
                 .when().post("/simpleResource");
 
     }

@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
-public class ConsoleMain  {
+public class CommandLineInterface {
 
     public static void main(String args[]) throws Exception {
 
@@ -40,7 +40,6 @@ public class ConsoleMain  {
         String method=args[1];
         String resourcepath=args[2];
         String sampleRequestPath=args[3];
-
 
         String sampleRequest = readFile(sampleRequestPath,Charset.defaultCharset());
         //String sampleRequest = "{\"username\":\"gbs\",\"firstName\":\"george\",\"lastName\":\"bernard shaw\",\"emailAddresses\":[\"gbs@ie\"]}";
@@ -73,6 +72,7 @@ public class ConsoleMain  {
             MuleEvent res = f.process(me);
         }catch(Exception e){
             //failed and  need to get helpful error message
+            e.printStackTrace();
             System.exit(1);
             throw e;
         }
@@ -97,8 +97,8 @@ public class ConsoleMain  {
                 "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd\">\n"+
                 "<flow name=\""+method+":"+resourcepath+"\">\n"+
                 "<component class=\"bayeslife.MyComponent\"/>\n"+
-                "<json:json-to-object-transformer returnClass=\"bayeslife.User\"/>"+
-                "<component class=\"bayeslife.MyComponent\"/>\n"+
+//                "<json:json-to-object-transformer returnClass=\"bayeslife.User\"/>"+
+//                "<component class=\"bayeslife.LoggingComponent\"/>\n"+
                 "</flow>\n"+
                 "</mule>";
 

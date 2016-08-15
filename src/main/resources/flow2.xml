@@ -11,6 +11,7 @@
 
 
     <flow name="put:/currentuser">
+        <component class="bayeslife.MyComponent"/>
         <set-payload value="hello"/>
     </flow>
 
